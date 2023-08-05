@@ -4,7 +4,7 @@ export default class GotService {
     this._apiBase = 'https://www.anapioficeandfire.com/api';
   }
 
-  async getResourse(url) {
+  getResourse = async (url) => {
     // url приходить при виклику, а перша частина береться з конструктора
     const res = await fetch(`${this._apiBase}${url}`);
 
@@ -14,29 +14,31 @@ export default class GotService {
 
     return await res.json();
   }
-  async getAllCharacters() {
+  getAllCharacters = async () => {
     // отримувати п'яту сторінку з 10 персонажами
     const res = await this.getResourse(`/characters?page=5&pageSize=10`);
     return res.map(this._transformCharacter)
   }
   // щоб викликати одного якогось персонажа
-  async getCharacter(id) {
+  getCharacter = async (id) => {
     const character = await this.getResourse(`/characters/${id}`);
     return this._transformCharacter(character);
   }
 
-  getAllBooks() {
+  getAllBooks = async () => {
     return this.getResourse('/books/');
   }
-  getBook(id) {
+  getBook = async (id) => {
     return this.getResourse(`/books/${id}`);
   }
 
-  getAllHouses() {
-    return this.getResourse('/houses/');
+  getAllHouses = async () => {
+    const res = await this.getResourse('/houses/');
+    return res.map(this._transformHouse);
   }
-  getHouse(id) {
-    return this.getResourse(`/houses/${id}`);
+  getHouse = async (id) => {
+    const house = await this.getResourse(`/houses/${id}`);
+    return this._transformHouse(house);
   }
 
   _transformCharacter(char) {
@@ -56,7 +58,7 @@ export default class GotService {
       words: house.words,
       titles: house.titles,
       overlord: house.overlord,
-      ancestralWeapons: house.ancestralWeapons()
+      ancestralWeapons: house.ancestralWeapons
     }
   }
   // трансформація книг
